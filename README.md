@@ -3,8 +3,8 @@
  flutter_guitar_tabs is a package to show guitar tabs like the one below:
 
  ![Example 1](images/example1.png)
- ![Example 1](images/example2.png)
- ![Example 1](images/example3.png)
+ ![Example 2](images/example2.png)
+ ![Example 3](images/example3.png)
 
 ## How to use the package
 
