@@ -3,8 +3,15 @@ library flutter_guitar_tabs;
 import 'dart:math' as math;
 import 'package:flutter/material.dart';
 
+
+/// A widget to display guitar tabs.
+/// The widget TabWidget receives two parameters, `name` and `tabs`.
+/// `name` is the name displayed on the top.
+/// `tabs` is a list of strings containing up to 6 numbers, or `x`, with seperating spaces.
 class TabWidget extends StatefulWidget {
+  /// The name of the chord. This is only displayed at the top.
   final String name;
+  /// A list of strings containing up to 6 numbers, or `x`, with seperating spaces.
   final List<String> tabs;
 
   TabWidget({@required this.name, @required this.tabs, Key key}) : super(key: key);
