@@ -1,7 +1,6 @@
 library flutter_guitar_tabs;
 
 import 'dart:math' as math;
-
 import 'package:flutter/material.dart';
 
 class TabWidget extends StatefulWidget {
@@ -14,13 +13,13 @@ class TabWidget extends StatefulWidget {
   _TabWidgetState createState() => _TabWidgetState(name, tabs);
 }
 
-class Renderer {
+class _Renderer {
   final Function(double x, double y, String text, String font, double size) text;
   final Function(double x, double y, double r, bool fill, [double lineWidth]) circle;
   final Function(double x1, double y1, double x2, double y2, double lineWidth) rect;
   final Function(double startX, double startY, double endX, double endY, double lineWidth) line;
 
-  Renderer({this.text, this.circle, this.line, this.rect});
+  _Renderer({this.text, this.circle, this.line, this.rect});
 }
 
 class _TabWidgetState extends State<TabWidget> {
@@ -50,7 +49,7 @@ class _TabWidgetState extends State<TabWidget> {
                     height: 150,
                     width: 180,
                     child: CustomPaint(
-                      painter: MyPainter(e, ''),
+                      painter: _MyPainter(e, ''),
                     ),
                   ),
                 ),
@@ -82,12 +81,12 @@ class _TabWidgetState extends State<TabWidget> {
   }
 }
 
-class MyPainter extends CustomPainter {
+class _MyPainter extends CustomPainter {
   final Paint myPaint = Paint()
     ..color = Colors.black
     ..strokeWidth = 3
     ..style = PaintingStyle.stroke;
-  Renderer renderer;
+  _Renderer renderer;
   Canvas currentCanvas;
   String name;
   String rawPositions;
@@ -99,11 +98,11 @@ class MyPainter extends CustomPainter {
   int startFret;
   static const yOffset = 30;
 
-  MyPainter(String positions, String fingers) {
+  _MyPainter(String positions, String fingers) {
     this.parse(positions, fingers);
     this.rawPositions = positions;
     this.rawFingers = fingers ?? '';
-    renderer = Renderer(
+    renderer = _Renderer(
       text: (double x, double y, String text, String font, double size) {},
       circle: (double x, double y, double r, bool fill, [double lineWidth]) {
         if (fill) {
