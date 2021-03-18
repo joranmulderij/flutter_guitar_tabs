@@ -1,6 +1,6 @@
 name: flutter_guitar_tabs
 description: A widget to display guitar tabs. Renders open strings, muted strings, and bars.
-version: 0.0.4
+version: 0.0.5
 repository: https://github.com/joranmulderij/flutter_guitar_tabs
 
 environment:

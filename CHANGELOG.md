@@ -1,3 +1,7 @@
+## [0.0.5] - 3/18/2021
+
+* Solve Android specific rendering error.
+
 ## [0.0.3] - 3/16/2021
 
 * Introduce a new widget: `FlutterGuitarTab`.
