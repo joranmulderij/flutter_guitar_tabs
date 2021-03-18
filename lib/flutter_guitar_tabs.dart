@@ -53,14 +53,14 @@ class TabWidget extends StatefulWidget {
 }
 
 class _Renderer {
-  final Function(double x, double y, String text, String font, double size)
+  final Function(dynamic x, dynamic y, String text, String font, dynamic size)
       text;
-  final Function(double x, double y, double r, bool fill, [double lineWidth])
+  final Function(dynamic x, dynamic y, dynamic r, bool fill, [dynamic lineWidth])
       circle;
-  final Function(double x1, double y1, double x2, double y2, double lineWidth)
+  final Function(dynamic x1, dynamic y1, dynamic x2, dynamic y2, dynamic lineWidth)
       rect;
-  final Function(double startX, double startY, double endX, double endY,
-      double lineWidth) line;
+  final Function(dynamic startX, dynamic startY, dynamic endX, dynamic endY,
+      dynamic lineWidth) line;
 
   _Renderer({this.text, this.circle, this.line, this.rect});
 }
@@ -144,24 +144,24 @@ class _MyPainter extends CustomPainter {
     this.rawPositions = positions;
     this.rawFingers = fingers ?? '';
     renderer = _Renderer(
-      text: (double x, double y, String text, String font, double size) {},
-      circle: (double x, double y, double r, bool fill, [double lineWidth]) {
+      text: (dynamic x, dynamic y, String text, String font, dynamic size) {},
+      circle: (dynamic x, dynamic y, dynamic r, bool fill, [dynamic lineWidth]) {
         if (fill) {
           currentCanvas.drawCircle(
-              Offset(x, y - yOffset), r, myPaint..style = PaintingStyle.fill);
+              Offset(x.toDouble(), y.toDouble() - yOffset.toDouble()), r, myPaint..style = PaintingStyle.fill);
         } else {
           currentCanvas.drawCircle(
-              Offset(x, y - yOffset), r, myPaint..style = PaintingStyle.stroke);
+              Offset(x.toDouble(), y.toDouble() - yOffset.toDouble()), r, myPaint..style = PaintingStyle.stroke);
         }
       },
-      rect: (double x1, double y1, double x2, double y2, double lineWidth) {
-        currentCanvas.drawRect(Rect.fromLTWH(x1, y1 - yOffset, x2, y2),
+      rect: (dynamic x1, dynamic y1, dynamic x2, dynamic y2, dynamic lineWidth) {
+        currentCanvas.drawRect(Rect.fromLTWH(x1.toDouble(), y1.toDouble() - yOffset.toDouble(), x2.toDouble(), y2.toDouble()),
             myPaint..style = PaintingStyle.fill);
       },
-      line: (double startX, double startY, double endX, double endY,
-          double lineWidth) {
-        currentCanvas.drawLine(Offset(startX, startY - yOffset),
-            Offset(endX, endY - yOffset), myPaint..strokeWidth = lineWidth);
+      line: (dynamic startX, dynamic startY, dynamic endX, dynamic endY,
+          dynamic lineWidth) {
+        currentCanvas.drawLine(Offset(startX.toDouble(), startY.toDouble() - yOffset.toDouble()),
+            Offset(endX.toDouble(), endY.toDouble() - yOffset.toDouble()), myPaint..strokeWidth = lineWidth);
       },
     );
   }
