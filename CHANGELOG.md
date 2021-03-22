@@ -1,3 +1,7 @@
+## [0.0.6] - 3/22/2021
+
+* Allow multiple sizes.
+
 ## [0.0.5] - 3/18/2021
 
 * Solve Android specific rendering error.

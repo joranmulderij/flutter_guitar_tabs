@@ -41,10 +41,11 @@ TabWidget(
 )
 ```
 
+For both widgets a `size` parameter can be defined that has to be between 1 and 10 inclusive.
+
 ## Todo:
 
 - Add support for fingering marks.
-- Different sizes.
 
 PR's are welcome.
 

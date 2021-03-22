@@ -7,10 +7,17 @@ class FlutterGuitarTab extends StatelessWidget {
   /// The name of the chord. This is only displayed at the top.
   final String name;
 
-  /// A string containing up to 6 numbers, or `x`, with seperating spaces.
+  /// A string containing up to 6 numbers, or `x`, with separating spaces.
   final String tab;
 
-  FlutterGuitarTab({this.name, this.tab});
+  /// The size of the tab. Has to be between 1 and 10 inclusive. Defaults to 9.
+  final int size;
+
+  FlutterGuitarTab({this.name = '', @required this.tab, this.size = 9, Key key})
+      : super(key: key) {
+    assert(
+        size <= 10 && size >= 1, 'Size has to be between 1 and 10 inclusive.');
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -20,13 +27,37 @@ class FlutterGuitarTab extends StatelessWidget {
       children: [
         Text(
           name,
-          style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+          style: TextStyle(
+              fontSize: [15.0, 18, 18, 24, 24, 24, 24, 24, 24, 28][size - 1],
+              fontWeight: FontWeight.bold),
         ),
         Container(
-          height: 150,
-          width: 180,
+          height: [
+            30,
+            45.0,
+            50.0,
+            70.0,
+            90.0,
+            110.0,
+            130.0,
+            130.0,
+            150.0,
+            160.0
+          ][size - 1],
+          width: [
+            35,
+            55.0,
+            72.0,
+            90.0,
+            107.0,
+            127.0,
+            145.0,
+            166.0,
+            180.0,
+            197.0
+          ][size - 1],
           child: CustomPaint(
-            painter: _MyPainter(tab, ''),
+            painter: _MyPainter(tab, '', size: size),
           ),
         ),
       ],
@@ -45,20 +76,23 @@ class TabWidget extends StatefulWidget {
   /// A list of strings containing up to 6 numbers, or `x`, with seperating spaces.
   final List<String> tabs;
 
-  TabWidget({@required this.name, @required this.tabs, Key key})
+  /// The size of the tab. Has to be between 1 and 10 inclusive. Defaults to 9.
+  final int size;
+
+  TabWidget({@required this.name, @required this.tabs, this.size = 9, Key key})
       : super(key: key);
 
   @override
-  _TabWidgetState createState() => _TabWidgetState(name, tabs);
+  _TabWidgetState createState() => _TabWidgetState(name, tabs, size: size);
 }
 
 class _Renderer {
   final Function(dynamic x, dynamic y, String text, String font, dynamic size)
       text;
-  final Function(dynamic x, dynamic y, dynamic r, bool fill, [dynamic lineWidth])
-      circle;
-  final Function(dynamic x1, dynamic y1, dynamic x2, dynamic y2, dynamic lineWidth)
-      rect;
+  final Function(dynamic x, dynamic y, dynamic r, bool fill,
+      [dynamic lineWidth]) circle;
+  final Function(
+      dynamic x1, dynamic y1, dynamic x2, dynamic y2, dynamic lineWidth) rect;
   final Function(dynamic startX, dynamic startY, dynamic endX, dynamic endY,
       dynamic lineWidth) line;
 
@@ -70,8 +104,9 @@ class _TabWidgetState extends State<TabWidget> {
   final length;
   int index = 0;
   final List<String> tabs;
+  final int size;
 
-  _TabWidgetState(this.name, this.tabs) : length = tabs.length;
+  _TabWidgetState(this.name, this.tabs, {this.size}) : length = tabs.length;
 
   @override
   Widget build(BuildContext context) {
@@ -79,20 +114,14 @@ class _TabWidgetState extends State<TabWidget> {
       mainAxisAlignment: MainAxisAlignment.center,
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        Text(
-          name,
-          style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-        ),
         IndexedStack(
           index: index,
           children: tabs
               .map(
-                (e) => Container(
-                  height: 150,
-                  width: 180,
-                  child: CustomPaint(
-                    painter: _MyPainter(e, ''),
-                  ),
+                (e) => FlutterGuitarTab(
+                  tab: e,
+                  name: name,
+                  size: size,
                 ),
               )
               .toList(),
@@ -137,31 +166,43 @@ class _MyPainter extends CustomPainter {
   int fretCount;
   List<int> fingerings;
   int startFret;
-  static const yOffset = 30;
+  final yOffset;
+  final int size;
 
-  _MyPainter(String positions, String fingers) {
+  _MyPainter(String positions, String fingers, {this.size})
+      : yOffset = [10, 15, 20, 20, 20, 20, 30, 33, 35, 40][size - 1] {
     this.parse(positions, fingers);
     this.rawPositions = positions;
     this.rawFingers = fingers ?? '';
     renderer = _Renderer(
       text: (dynamic x, dynamic y, String text, String font, dynamic size) {},
-      circle: (dynamic x, dynamic y, dynamic r, bool fill, [dynamic lineWidth]) {
+      circle: (dynamic x, dynamic y, dynamic r, bool fill,
+          [dynamic lineWidth]) {
         if (fill) {
           currentCanvas.drawCircle(
-              Offset(x.toDouble(), y.toDouble() - yOffset.toDouble()), r, myPaint..style = PaintingStyle.fill);
+              Offset(x.toDouble(), y.toDouble() - yOffset.toDouble()),
+              r,
+              myPaint..style = PaintingStyle.fill);
         } else {
           currentCanvas.drawCircle(
-              Offset(x.toDouble(), y.toDouble() - yOffset.toDouble()), r, myPaint..style = PaintingStyle.stroke);
+              Offset(x.toDouble(), y.toDouble() - yOffset.toDouble()),
+              r,
+              myPaint..style = PaintingStyle.stroke);
         }
       },
-      rect: (dynamic x1, dynamic y1, dynamic x2, dynamic y2, dynamic lineWidth) {
-        currentCanvas.drawRect(Rect.fromLTWH(x1.toDouble(), y1.toDouble() - yOffset.toDouble(), x2.toDouble(), y2.toDouble()),
+      rect:
+          (dynamic x1, dynamic y1, dynamic x2, dynamic y2, dynamic lineWidth) {
+        currentCanvas.drawRect(
+            Rect.fromLTWH(x1.toDouble(), y1.toDouble() - yOffset.toDouble(),
+                x2.toDouble(), y2.toDouble()),
             myPaint..style = PaintingStyle.fill);
       },
       line: (dynamic startX, dynamic startY, dynamic endX, dynamic endY,
           dynamic lineWidth) {
-        currentCanvas.drawLine(Offset(startX.toDouble(), startY.toDouble() - yOffset.toDouble()),
-            Offset(endX.toDouble(), endY.toDouble() - yOffset.toDouble()), myPaint..strokeWidth = lineWidth);
+        currentCanvas.drawLine(
+            Offset(startX.toDouble(), startY.toDouble() - yOffset.toDouble()),
+            Offset(endX.toDouble(), endY.toDouble() - yOffset.toDouble()),
+            myPaint..strokeWidth = lineWidth);
       },
     );
   }
@@ -465,7 +506,7 @@ class _MyPainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     currentCanvas = canvas;
-    draw(9);
+    draw(this.size);
   }
 
   @override
