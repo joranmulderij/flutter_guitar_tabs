@@ -1,3 +1,7 @@
+## [0.0.7] - 2/11/2021
+
+*  Resolve issue coming from an int to double cast. (caused by flutter update?)
+
 ## [0.0.6] - 3/22/2021
 
 * Allow multiple sizes.
