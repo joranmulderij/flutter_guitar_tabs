@@ -28,7 +28,7 @@ class FlutterGuitarTab extends StatelessWidget {
         Text(
           name,
           style: TextStyle(
-              fontSize: [15.0, 18, 18, 24, 24, 24, 24, 24, 24, 28][size - 1],
+              fontSize: [15.0, 18.0, 18.0, 24.0, 24.0, 24.0, 24.0, 24.0, 24.0, 28.0][size - 1],
               fontWeight: FontWeight.bold),
         ),
         Container(
