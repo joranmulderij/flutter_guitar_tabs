@@ -13,7 +13,7 @@ class FlutterGuitarTab extends StatelessWidget {
   /// The size of the tab. Has to be between 1 and 10 inclusive. Defaults to 9.
   final int size;
 
-  FlutterGuitarTab({this.name = '', @required this.tab, this.size = 9, Key key})
+  FlutterGuitarTab({this.name = '', required this.tab, this.size = 9, Key? key})
       : super(key: key) {
     assert(
         size <= 10 && size >= 1, 'Size has to be between 1 and 10 inclusive.');
@@ -43,7 +43,7 @@ class FlutterGuitarTab extends StatelessWidget {
             130.0,
             150.0,
             160.0
-          ][size - 1],
+          ][size - 1] as double?,
           width: [
             35,
             55.0,
@@ -55,7 +55,7 @@ class FlutterGuitarTab extends StatelessWidget {
             166.0,
             180.0,
             197.0
-          ][size - 1],
+          ][size - 1] as double?,
           child: CustomPaint(
             painter: _MyPainter(tab, '', size: size),
           ),
@@ -79,7 +79,7 @@ class TabWidget extends StatefulWidget {
   /// The size of the tab. Has to be between 1 and 10 inclusive. Defaults to 9.
   final int size;
 
-  TabWidget({@required this.name, @required this.tabs, this.size = 9, Key key})
+  TabWidget({required this.name, required this.tabs, this.size = 9, Key? key})
       : super(key: key);
 
   @override
@@ -87,14 +87,14 @@ class TabWidget extends StatefulWidget {
 }
 
 class _Renderer {
-  final Function(dynamic x, dynamic y, String text, String font, dynamic size)
+  final Function(dynamic x, dynamic y, String? text, String? font, dynamic size)?
       text;
   final Function(dynamic x, dynamic y, dynamic r, bool fill,
-      [dynamic lineWidth]) circle;
+      [dynamic lineWidth])? circle;
   final Function(
-      dynamic x1, dynamic y1, dynamic x2, dynamic y2, dynamic lineWidth) rect;
+      dynamic x1, dynamic y1, dynamic x2, dynamic y2, dynamic lineWidth)? rect;
   final Function(dynamic startX, dynamic startY, dynamic endX, dynamic endY,
-      dynamic lineWidth) line;
+      dynamic lineWidth)? line;
 
   _Renderer({this.text, this.circle, this.line, this.rect});
 }
@@ -104,7 +104,7 @@ class _TabWidgetState extends State<TabWidget> {
   final length;
   int index = 0;
   final List<String> tabs;
-  final int size;
+  final int? size;
 
   _TabWidgetState(this.name, this.tabs, {this.size}) : length = tabs.length;
 
@@ -121,7 +121,7 @@ class _TabWidgetState extends State<TabWidget> {
                 (e) => FlutterGuitarTab(
                   tab: e,
                   name: name,
-                  size: size,
+                  size: size!,
                 ),
               )
               .toList(),
@@ -133,7 +133,7 @@ class _TabWidgetState extends State<TabWidget> {
                 icon: Icon(Icons.chevron_left),
                 onPressed: () {
                   setState(() {
-                    index = (index - 1) % length;
+                    index = (index - 1) % length as int;
                   });
                 }),
             Text('${index + 1} / $length'),
@@ -141,7 +141,7 @@ class _TabWidgetState extends State<TabWidget> {
                 icon: Icon(Icons.chevron_right),
                 onPressed: () {
                   setState(() {
-                    index = (index + 1) % length;
+                    index = (index + 1) % length as int;
                   });
                 }),
           ],
@@ -156,26 +156,26 @@ class _MyPainter extends CustomPainter {
     ..color = Colors.black
     ..strokeWidth = 3
     ..style = PaintingStyle.stroke;
-  _Renderer renderer;
-  Canvas currentCanvas;
-  String name;
-  String rawPositions;
-  String rawFingers;
-  List<int> positions;
-  int stringCount;
-  int fretCount;
-  List<int> fingerings;
-  int startFret;
+  _Renderer? renderer;
+  late Canvas currentCanvas;
+  String? name;
+  String? rawPositions;
+  String? rawFingers;
+  late List<int?> positions;
+  int? stringCount;
+  late int fretCount;
+  late List<int?> fingerings;
+  int? startFret;
   final yOffset;
   final int size;
 
-  _MyPainter(String positions, String fingers, {this.size})
+  _MyPainter(String positions, String fingers, {required this.size})
       : yOffset = [10, 15, 20, 20, 20, 20, 30, 33, 35, 40][size - 1] {
     this.parse(positions, fingers);
     this.rawPositions = positions;
     this.rawFingers = fingers ?? '';
     renderer = _Renderer(
-      text: (dynamic x, dynamic y, String text, String font, dynamic size) {},
+      text: (dynamic x, dynamic y, String? text, String? font, dynamic size) {},
       circle: (dynamic x, dynamic y, dynamic r, bool fill,
           [dynamic lineWidth]) {
         if (fill) {
@@ -251,7 +251,7 @@ class _MyPainter extends CustomPainter {
     var j = 0;
     for (var i = 0; i < fingers.length; i++) {
       for (; j < this.positions.length; j++) {
-        if (this.positions[j] <= 0) {
+        if (this.positions[j]! <= 0) {
           this.fingerings.add(null);
         } else {
           this.fingerings.add(int.parse(fingers[i]));
@@ -271,14 +271,14 @@ class _MyPainter extends CustomPainter {
           info['nameFontPaddingBottom'] +
           info['dotRadius'] -
           2;
-      if (this.startFret > 1) {
+      if (this.startFret! > 1) {
         y += info['nutSize'];
       }
       if (pos == null) {
         this.drawCross(
             info, x, y, info['muteStringRadius'], info['muteStringLineWidth']);
       } else if (pos == 0) {
-        r.circle(
+        r!.circle!(
             x, y, info['openStringRadius'], false, info['openStringLineWidth']);
       }
     }
@@ -289,13 +289,13 @@ class _MyPainter extends CustomPainter {
     for (int i = 0; i < this.positions.length; i++) {
       var pos = this.positions[i] ?? 0;
       if (pos > 0) {
-        var relativePos = pos - this.startFret + 1;
+        var relativePos = pos - this.startFret! + 1;
         var x = info['boxStartX'] + i * info['cellWidth'];
         if (relativePos <= 5) {
           var y = info['boxStartY'] +
               relativePos * info['cellHeight'] -
               (info['cellHeight'] / 2);
-          r.circle(x, y, info['dotRadius'], true);
+          r!.circle!(x, y, info['dotRadius'], true);
         }
       }
     }
@@ -303,10 +303,10 @@ class _MyPainter extends CustomPainter {
 
   drawFretGrid(info) {
     var r = this.renderer;
-    var width = (this.stringCount - 1) * info['cellWidth'];
-    for (var i = 0; i <= this.stringCount - 1; i++) {
+    var width = (this.stringCount! - 1) * info['cellWidth'];
+    for (var i = 0; i <= this.stringCount! - 1; i++) {
       var x = info['boxStartX'] + i * info['cellWidth'];
-      r.line(
+      r!.line!(
           x,
           info['boxStartY'],
           x,
@@ -316,7 +316,7 @@ class _MyPainter extends CustomPainter {
 
     for (var i = 0; i <= this.fretCount; i++) {
       var y = info['boxStartY'] + i * info['cellHeight'];
-      r.line(info['boxStartX'], y, info['boxStartX'] + width, y,
+      r!.line!(info['boxStartX'], y, info['boxStartX'] + width, y,
           info['lineWidth']);
     }
   }
@@ -324,10 +324,10 @@ class _MyPainter extends CustomPainter {
   drawNut(info) {
     var r = this.renderer;
     if (this.startFret == 1) {
-      r.rect(info['boxStartX'], info['boxStartY'] - info['nutSize'],
+      r!.rect!(info['boxStartX'], info['boxStartY'] - info['nutSize'],
           info['boxWidth'], info['nutSize'], info['lineWidth']);
     } else {
-      r.text(
+      r!.text!(
           info['boxStartX'] - info['dotRadius'],
           info['boxStartY'] + info['cellHeight'] / 2.0,
           this.startFret.toString(),
@@ -337,8 +337,8 @@ class _MyPainter extends CustomPainter {
   }
 
   drawName(info) {
-    var r = this.renderer;
-    r.text(info['width'] / 2.0, info['nameFontSize'] + info['lineWidth'] * 3,
+    var r = this.renderer!;
+    r.text!(info['width'] / 2.0, info['nameFontSize'] + info['lineWidth'] * 3,
         this.name, info['font'], info['nameFontSize']);
   }
 
@@ -363,7 +363,7 @@ class _MyPainter extends CustomPainter {
     Map<String, dynamic> info = {};
     scale--;
     for (var name in this.sizes.keys) {
-      info[name] = this.sizes[name][scale];
+      info[name] = this.sizes[name]![scale];
     }
 
     info['scale'] = scale;
@@ -373,7 +373,7 @@ class _MyPainter extends CustomPainter {
     info['cellHeight'] = info['cellWidth'];
     info['dotWidth'] = 2 * info['dotRadius'];
     info['font'] = 'Arial';
-    info['boxWidth'] = (this.stringCount - 1) * info['cellWidth'];
+    info['boxWidth'] = (this.stringCount! - 1) * info['cellWidth'];
     info['boxHeight'] = (this.fretCount) * info['cellHeight'];
     info['width'] = info['boxWidth'] + 4 * info['cellWidth'];
     info['height'] = info['nameFontSize'] +
@@ -431,14 +431,14 @@ class _MyPainter extends CustomPainter {
               relativePos * info['cellHeight'] -
               (info['cellHeight'] / 2);
           //console.log('y: ' + y + ', barWidth: ' + info.barWidth);
-          r.line(xStart, y, xEnd, y, info['barWidth']);
+          r!.line!(xStart, y, xEnd, y, info['barWidth']);
         }
       }
 
       //Explicit, calculate from that
     } else {
       //Try to guesstimate whether there is a bar or not
-      var barFret = this.positions[this.positions.length - 1];
+      var barFret = this.positions[this.positions.length - 1]!;
       if (barFret <= 0) {
         return;
       }
@@ -461,11 +461,11 @@ class _MyPainter extends CustomPainter {
       if (startIndex >= 0) {
         var xStart = info['boxStartX'] + startIndex * info['cellWidth'];
         var xEnd = (this.positions.length - 1) * info['cellWidth'];
-        var relativePos = barFret - this.startFret + 1;
+        var relativePos = barFret - this.startFret! + 1;
         var y = info['boxStartY'] +
             relativePos * info['cellHeight'] -
             (info['cellHeight'] / 2);
-        r.line(xStart, y, xEnd, y, info['dotRadius']);
+        r!.line!(xStart, y, xEnd, y, info['dotRadius']);
       }
     }
   }
@@ -482,7 +482,7 @@ class _MyPainter extends CustomPainter {
       var endX = x + radius * math.cos(endAngle);
       var endY = y + radius * math.sin(endAngle);
 
-      r.line(startX, startY, endX, endY, lineWidth);
+      r!.line!(startX, startY, endX, endY, lineWidth);
     }
   }
 
@@ -491,14 +491,14 @@ class _MyPainter extends CustomPainter {
     var fontSize = info['fingerFontSize'];
     for (var i in this.fingerings) {
       var finger = i;
-      var x = info['boxStartX'] + i * info['cellWidth'];
+      var x = info['boxStartX'] + i! * info['cellWidth'];
       var y = info['boxStartY'] +
           info['boxHeight'] +
           fontSize +
           info['lineWidth'] +
           1;
       if (finger != null) {
-        r.text(x, y, finger.toString(), info['font'], fontSize);
+        r!.text!(x, y, finger.toString(), info['font'], fontSize);
       }
     }
   }
