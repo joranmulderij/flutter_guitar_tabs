@@ -173,7 +173,7 @@ class _MyPainter extends CustomPainter {
       : yOffset = [10, 15, 20, 20, 20, 20, 30, 33, 35, 40][size - 1] {
     this.parse(positions, fingers);
     this.rawPositions = positions;
-    this.rawFingers = fingers ?? '';
+    this.rawFingers = fingers;
     renderer = _Renderer(
       text: (dynamic x, dynamic y, String? text, String? font, dynamic size) {},
       circle: (dynamic x, dynamic y, dynamic r, bool fill,
@@ -245,9 +245,6 @@ class _MyPainter extends CustomPainter {
       this.startFret = minFret;
     }
     this.fingerings = [];
-    if (fingers == null) {
-      return;
-    }
     var j = 0;
     for (var i = 0; i < fingers.length; i++) {
       for (; j < this.positions.length; j++) {
