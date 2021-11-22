@@ -82,7 +82,10 @@ class TabWidget extends StatefulWidget {
   /// The size of the tab. Has to be between 1 and 10 inclusive. Defaults to 9.
   final int size;
 
-  TabWidget({required this.name, required this.tabs, this.size = 9, Key? key})
+  /// The color of the tab. Defaults to `Colors.black`.
+  final Color color;
+
+  TabWidget({required this.name, required this.tabs, this.size = 9, this.color = Colors.black, Key? key})
       : super(key: key);
 
   @override
@@ -125,6 +128,7 @@ class _TabWidgetState extends State<TabWidget> {
                   tab: e,
                   name: name,
                   size: size!,
+                  color: widget.color,
                 ),
               )
               .toList(),
