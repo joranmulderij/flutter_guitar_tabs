@@ -13,7 +13,10 @@ class FlutterGuitarTab extends StatelessWidget {
   /// The size of the tab. Has to be between 1 and 10 inclusive. Defaults to 9.
   final int size;
 
-  FlutterGuitarTab({this.name = '', required this.tab, this.size = 9, Key? key})
+  /// The color of the tab. Defaults to `Colors.black`.
+  final Color color;
+
+  FlutterGuitarTab({this.name = '', required this.tab, this.size = 9, this.color = Colors.black, Key? key})
       : super(key: key) {
     assert(
         size <= 10 && size >= 1, 'Size has to be between 1 and 10 inclusive.');
@@ -57,7 +60,7 @@ class FlutterGuitarTab extends StatelessWidget {
             197.0
           ][size - 1] as double?,
           child: CustomPaint(
-            painter: _MyPainter(tab, '', size: size),
+            painter: _MyPainter(tab, '', size: size, color: color),
           ),
         ),
       ],
@@ -152,10 +155,7 @@ class _TabWidgetState extends State<TabWidget> {
 }
 
 class _MyPainter extends CustomPainter {
-  final Paint myPaint = Paint()
-    ..color = Colors.black
-    ..strokeWidth = 3
-    ..style = PaintingStyle.stroke;
+  final Paint myPaint;
   _Renderer? renderer;
   late Canvas currentCanvas;
   String? name;
@@ -169,8 +169,12 @@ class _MyPainter extends CustomPainter {
   final yOffset;
   final int size;
 
-  _MyPainter(String positions, String fingers, {required this.size})
-      : yOffset = [10, 15, 20, 20, 20, 20, 30, 33, 35, 40][size - 1] {
+  _MyPainter(String positions, String fingers, {required this.size, required Color color})
+      : yOffset = [10, 15, 20, 20, 20, 20, 30, 33, 35, 40][size - 1],
+      myPaint = Paint()
+    ..color = color
+    ..strokeWidth = 3
+    ..style = PaintingStyle.stroke {
     this.parse(positions, fingers);
     this.rawPositions = positions;
     this.rawFingers = fingers;
