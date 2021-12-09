@@ -6,6 +6,10 @@ This is a dart implementation of the [chord.js](https://github.com/einaregilsson
 ![Example 2](https://raw.githubusercontent.com/joranmulderij/flutter_guitar_tabs/main/images/example2.png)
 ![Example 3](https://raw.githubusercontent.com/joranmulderij/flutter_guitar_tabs/main/images/example3.png)
 
+## Where to get this data from
+
+In [this issue](https://github.com/joranmulderij/flutter_guitar_tabs/issues/4) some recourses containing this data can be found.
+
 ## `FlutterGuitarTab`
 
 The widget `FlutterGuitarTab` takes two parameters, `name` and `tab`.
@@ -41,7 +45,7 @@ TabWidget(
 )
 ```
 
-For both widgets a `size` parameter can be defined that has to be between 1 and 10 inclusive.
+For both widgets a `size` parameter can be defined that has to be an integer between 1 and 10 inclusive.
 
 ## Todo:
 
