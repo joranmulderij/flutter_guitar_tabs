@@ -47,6 +47,8 @@ TabWidget(
 
 For both widgets a `size` parameter can be defined that has to be an integer between 1 and 10 inclusive.
 
+Both widgets also have a `color` parameter that defaults to `Colors.black`.
+
 ## Todo:
 
 - Add support for fingering marks.

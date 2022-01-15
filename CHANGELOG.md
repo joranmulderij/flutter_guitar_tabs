@@ -1,3 +1,8 @@
+## [0.0.8] - 1/15/2022
+
+* Migrate to null safety
+* Add some properties
+
 ## [0.0.7] - 2/11/2021
 
 *  Resolve issue coming from an int to double cast. (caused by flutter update?)
