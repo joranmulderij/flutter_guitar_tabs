@@ -1,3 +1,7 @@
+## [0.0.9]
+
+* Add `showStartFretNumber` property
+
 ## [0.0.8] - 1/15/2022
 
 * Migrate to null safety

@@ -16,7 +16,16 @@ class FlutterGuitarTab extends StatelessWidget {
   /// The color of the tab. Defaults to `Colors.black`.
   final Color color;
 
-  FlutterGuitarTab({this.name = '', required this.tab, this.size = 9, this.color = Colors.black, Key? key})
+  /// Whether or not to show the number that indicates the fret. Defaults to `false`.
+  final bool showStartFretNumber;
+
+  FlutterGuitarTab(
+      {this.name = '',
+      required this.tab,
+      this.size = 9,
+      this.color = Colors.black,
+      this.showStartFretNumber = false,
+      Key? key})
       : super(key: key) {
     assert(
         size <= 10 && size >= 1, 'Size has to be between 1 and 10 inclusive.');
@@ -31,8 +40,21 @@ class FlutterGuitarTab extends StatelessWidget {
         Text(
           name,
           style: TextStyle(
-              fontSize: [15.0, 18.0, 18.0, 24.0, 24.0, 24.0, 24.0, 24.0, 24.0, 28.0][size - 1],
-              fontWeight: FontWeight.bold),
+            fontSize: [
+              15.0,
+              18.0,
+              18.0,
+              24.0,
+              24.0,
+              24.0,
+              24.0,
+              24.0,
+              24.0,
+              28.0
+            ][size - 1],
+            fontWeight: FontWeight.bold,
+            color: color,
+          ),
         ),
         Container(
           height: [
@@ -60,7 +82,14 @@ class FlutterGuitarTab extends StatelessWidget {
             197.0
           ][size - 1] as double?,
           child: CustomPaint(
-            painter: _MyPainter(tab, '', size: size, color: color),
+            painter: _MyPainter(
+              tab,
+              '',
+              size: size,
+              color: color,
+              name: name,
+              showFretNumbers: showStartFretNumber,
+            ),
           ),
         ),
       ],
@@ -85,7 +114,16 @@ class TabWidget extends StatefulWidget {
   /// The color of the tab. Defaults to `Colors.black`.
   final Color color;
 
-  TabWidget({required this.name, required this.tabs, this.size = 9, this.color = Colors.black, Key? key})
+  /// Whether or not to show the number that indicates the fret. Defaults to `false`.
+  final bool showStartFretNumber;
+
+  TabWidget(
+      {required this.name,
+      required this.tabs,
+      this.size = 9,
+      this.color = Colors.black,
+      this.showStartFretNumber = false,
+      Key? key})
       : super(key: key);
 
   @override
@@ -93,8 +131,8 @@ class TabWidget extends StatefulWidget {
 }
 
 class _Renderer {
-  final Function(dynamic x, dynamic y, String? text, String? font, dynamic size)?
-      text;
+  final Function(
+      dynamic x, dynamic y, String? text, String? font, dynamic size)? text;
   final Function(dynamic x, dynamic y, dynamic r, bool fill,
       [dynamic lineWidth])? circle;
   final Function(
@@ -129,6 +167,7 @@ class _TabWidgetState extends State<TabWidget> {
                   name: name,
                   size: size!,
                   color: widget.color,
+                  showStartFretNumber: widget.showStartFretNumber,
                 ),
               )
               .toList(),
@@ -137,14 +176,17 @@ class _TabWidgetState extends State<TabWidget> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             IconButton(
+                color: widget.color,
                 icon: Icon(Icons.chevron_left),
                 onPressed: () {
                   setState(() {
                     index = (index - 1) % length as int;
                   });
                 }),
-            Text('${index + 1} / $length'),
+            Text('${index + 1} / $length',
+                style: TextStyle(color: widget.color)),
             IconButton(
+                color: widget.color,
                 icon: Icon(Icons.chevron_right),
                 onPressed: () {
                   setState(() {
@@ -162,7 +204,7 @@ class _MyPainter extends CustomPainter {
   final Paint myPaint;
   _Renderer? renderer;
   late Canvas currentCanvas;
-  String? name;
+  String name;
   String? rawPositions;
   String? rawFingers;
   late List<int?> positions;
@@ -172,18 +214,32 @@ class _MyPainter extends CustomPainter {
   int? startFret;
   final yOffset;
   final int size;
+  final bool showFretNumbers;
 
-  _MyPainter(String positions, String fingers, {required this.size, required Color color})
+  _MyPainter(String positions, String fingers,
+      {required this.size,
+      required Color color,
+      required this.name,
+      required this.showFretNumbers})
       : yOffset = [10, 15, 20, 20, 20, 20, 30, 33, 35, 40][size - 1],
-      myPaint = Paint()
-    ..color = color
-    ..strokeWidth = 3
-    ..style = PaintingStyle.stroke {
+        myPaint = Paint()
+          ..color = color
+          ..strokeWidth = 3
+          ..style = PaintingStyle.stroke {
     this.parse(positions, fingers);
     this.rawPositions = positions;
     this.rawFingers = fingers;
     renderer = _Renderer(
-      text: (dynamic x, dynamic y, String? text, String? font, dynamic size) {},
+      text: (dynamic x, dynamic y, String? text, String? font, dynamic size) {
+        TextSpan textSpan = TextSpan(
+            text: text, style: TextStyle(fontSize: size, color: color));
+        TextPainter textPainter = TextPainter(
+            text: textSpan,
+            textAlign: TextAlign.start,
+            textDirection: TextDirection.rtl);
+        textPainter.layout();
+        textPainter.paint(currentCanvas, Offset(x, y));
+      },
       circle: (dynamic x, dynamic y, dynamic r, bool fill,
           [dynamic lineWidth]) {
         if (fill) {
@@ -331,20 +387,22 @@ class _MyPainter extends CustomPainter {
     if (this.startFret == 1) {
       r!.rect!(info['boxStartX'], info['boxStartY'] - info['nutSize'],
           info['boxWidth'], info['nutSize'], info['lineWidth']);
-    } else {
+    } else if(showFretNumbers) {
       r!.text!(
-          info['boxStartX'] - info['dotRadius'],
-          info['boxStartY'] + info['cellHeight'] / 2.0,
+          info['boxStartX'] -
+              info['nutSize'] * 1 -
+              info['fretFontSize'] * this.startFret.toString().length / 2,
+          info['boxStartY'] - 10 - info['cellHeight'] * 1.2,
           this.startFret.toString(),
           info['font'],
-          info['fretFontSize']);
+          info['fretFontSize'] * 0.8);
     }
   }
 
   drawName(info) {
-    var r = this.renderer!;
-    r.text!(info['width'] / 2.0, info['nameFontSize'] + info['lineWidth'] * 3,
-        this.name, info['font'], info['nameFontSize']);
+    // var r = this.renderer!;
+    // r.text!(info['width'] / 2.0, info['nameFontSize'] + info['lineWidth'] * 3,
+    //     this.name, info['font'], info['nameFontSize']);
   }
 
   //It's better to specify this explicitly. Trying to scale in a nice way to doesn't works so well.
