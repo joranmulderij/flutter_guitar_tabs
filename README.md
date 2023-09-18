@@ -5,6 +5,7 @@ This is a dart implementation of the [chord.js](https://github.com/einaregilsson
 ![Example 1](https://raw.githubusercontent.com/joranmulderij/flutter_guitar_tabs/main/images/example1.png)
 ![Example 2](https://raw.githubusercontent.com/joranmulderij/flutter_guitar_tabs/main/images/example2.png)
 ![Example 3](https://raw.githubusercontent.com/joranmulderij/flutter_guitar_tabs/main/images/example3.png)
+![Example 4](https://raw.githubusercontent.com/joranmulderij/flutter_guitar_tabs/main/images/example4.png)
 
 ## Where to get this data from
 
