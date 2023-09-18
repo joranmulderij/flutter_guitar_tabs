@@ -504,7 +504,7 @@ class _MyPainter extends CustomPainter {
       //Explicit, calculate from that
     } else {
       //Try to guesstimate whether there is a bar or not
-      var barFret = this.positions[this.positions.length - 1]!;
+      var barFret = this.positions[this.positions.length - 1] ?? 0;
       if (barFret <= 0) {
         return;
       }

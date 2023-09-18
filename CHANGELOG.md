@@ -1,3 +1,7 @@
+## [0.0.10]
+
+* Fix [#9](https://github.com/joranmulderij/flutter_guitar_tabs/issues/9)
+
 ## [0.0.9]
 
 * Add `showStartFretNumber` property
