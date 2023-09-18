@@ -10,6 +10,8 @@ class FlutterGuitarTab extends StatelessWidget {
   /// A string containing up to 6 numbers, or `x`, with separating spaces.
   final String tab;
 
+  List<String> get _positions => tab.split(' ');
+
   /// The size of the tab. Has to be between 1 and 10 inclusive. Defaults to 9.
   final int size;
 
@@ -58,7 +60,7 @@ class FlutterGuitarTab extends StatelessWidget {
         ),
         Container(
           height: [
-            30,
+            30.0,
             45.0,
             50.0,
             70.0,
@@ -68,19 +70,20 @@ class FlutterGuitarTab extends StatelessWidget {
             130.0,
             150.0,
             160.0
-          ][size - 1] as double?,
+          ][size - 1],
           width: [
-            35,
-            55.0,
-            72.0,
-            90.0,
-            107.0,
-            127.0,
-            145.0,
-            166.0,
-            180.0,
-            197.0
-          ][size - 1] as double?,
+                35.0,
+                55.0,
+                72.0,
+                90.0,
+                107.0,
+                127.0,
+                145.0,
+                166.0,
+                180.0,
+                197.0
+              ][size - 1] *
+              ((_positions.length + 3) / 9),
           child: CustomPaint(
             painter: _MyPainter(
               tab,
@@ -387,7 +390,7 @@ class _MyPainter extends CustomPainter {
     if (this.startFret == 1) {
       r!.rect!(info['boxStartX'], info['boxStartY'] - info['nutSize'],
           info['boxWidth'], info['nutSize'], info['lineWidth']);
-    } else if(showFretNumbers) {
+    } else if (showFretNumbers) {
       r!.text!(
           info['boxStartX'] -
               info['nutSize'] * 1 -
