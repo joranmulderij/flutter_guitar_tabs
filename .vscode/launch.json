@@ -5,15 +5,10 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "flutter_guitar_tabs",
-            "request": "launch",
-            "type": "dart"
-        },
-        {
-            "name": "flutter_guitar_tabs (profile mode)",
-            "request": "launch",
+            "name": "Flutter",
             "type": "dart",
-            "flutterMode": "profile"
+            "request": "launch",
+            "program": "example/lib/main.dart",
         }
     ]
 }
