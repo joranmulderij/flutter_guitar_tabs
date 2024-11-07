@@ -38,6 +38,11 @@ class HomePage extends StatelessWidget {
               showStartFretNumber: true,
             ),
           ),
+          FlutterGuitarTab(
+            name: 'Dm',
+            tab: 'x 0 0 2 3 1',
+            size: 5,
+          ),
         ],
       ),
     );
